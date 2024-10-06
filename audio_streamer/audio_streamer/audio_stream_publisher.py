@@ -27,7 +27,7 @@ class AudioStreamPublisher(Node):
         if self.selected_input_device is None:
             raise ValueError(f"No device found with the hardware ID {self.input_hw_id}")
         
-        self.get_logger().info("Audio Stream Publisher Node is running")
+        self.get_logger().info("Audio Stream Publisher Node has started")
         self.get_logger().info(f"Selected input device: {self.selected_input_device['name']}")
         self.get_logger().info(f"Max input channels: {self.selected_input_device['max_input_channels']}")
         self.get_logger().info(f"Default sample rate: {self.selected_input_device['default_samplerate']}")

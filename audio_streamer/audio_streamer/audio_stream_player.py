@@ -26,6 +26,9 @@ class AudioStreamPlayer(Node):
 
         self.stream = None  # Placeholder for the audio output stream
 
+        # Log that the node has started
+        self.get_logger().info("Audio Stream Player Node has started.")
+
     def audio_callback(self, msg):
         # Update sample rate and channel info based on the message
         self.sample_rate = msg.sample_rate
@@ -39,6 +42,7 @@ class AudioStreamPlayer(Node):
 
         # Start the stream if it is not running
         if self.stream is None:
+            self.get_logger().info("Starting audio output stream...")
             self.stream = sd.OutputStream(
                 device=self.output_device,
                 channels=self.channels,
@@ -74,6 +78,7 @@ class AudioStreamPlayer(Node):
     def destroy_node(self):
         # Stop and close the stream when the node is destroyed
         if self.stream:
+            self.get_logger().info("Stopping audio output stream.")
             self.stream.stop()
             self.stream.close()
         super().destroy_node()
