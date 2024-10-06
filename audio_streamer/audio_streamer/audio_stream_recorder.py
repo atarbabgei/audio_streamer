@@ -9,9 +9,17 @@ class AudioStreamRecorder(Node):
     def __init__(self):
         super().__init__('audio_stream_recorder')
 
-        # Parameters
-        self.sample_rate = 48000  # Will be updated based on the incoming audio message
-        self.channels = 1  # Will be updated based on the incoming audio message
+        # Declare parameters with default values
+        self.declare_parameter('sample_rate', 48000)
+        self.declare_parameter('channels', 1)
+        self.declare_parameter('file_prefix', 'audio_recording')
+
+        # Get parameters
+        self.sample_rate = self.get_parameter('sample_rate').get_parameter_value().integer_value
+        self.channels = self.get_parameter('channels').get_parameter_value().integer_value
+        self.file_prefix = self.get_parameter('file_prefix').get_parameter_value().string_value
+
+        # Audio buffer to store incoming data
         self.audio_buffer = []
 
         # Subscribe to the audio_stream topic
@@ -23,6 +31,9 @@ class AudioStreamRecorder(Node):
         )
 
         self.get_logger().info("Audio Stream Recorder Node has started.")
+        self.get_logger().info(f"Configured sample rate: {self.sample_rate}")
+        self.get_logger().info(f"Configured channels: {self.channels}")
+        self.get_logger().info(f"File prefix for recordings: {self.file_prefix}")
 
     def audio_callback(self, msg):
         # Update sample rate and channels if different
@@ -41,7 +52,7 @@ class AudioStreamRecorder(Node):
     def save_to_wav(self):
         # Get current date and time for the filename
         current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        file_name = f"audio_recording_{current_time}.wav"
+        file_name = f"{self.file_prefix}_{current_time}.wav"
 
         # Concatenate the buffered audio data
         audio_data = np.concatenate(self.audio_buffer, axis=0)

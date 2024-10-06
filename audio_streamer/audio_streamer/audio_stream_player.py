@@ -9,11 +9,21 @@ class AudioStreamPlayer(Node):
     def __init__(self):
         super().__init__('audio_stream_player')
 
-        # Output device setup (default system output, e.g., PulseAudio)
-        self.output_device = "pulse"  # Use system's default output device
-        self.sample_rate = 48000  # This will be updated based on incoming messages
-        self.channels = 1  # This will be updated based on incoming messages
-        self.buffer_size = 10  # Size of the buffer to hold audio chunks
+        # Declare parameters with default values
+        self.declare_parameter('output_device', 'pulse')  # Default output device is PulseAudio
+        self.declare_parameter('sample_rate', 48000)
+        self.declare_parameter('channels', 1)
+        self.declare_parameter('blocksize', 2048)
+        self.declare_parameter('buffer_size', 10)
+
+        # Get parameters
+        self.output_device = self.get_parameter('output_device').get_parameter_value().string_value
+        self.sample_rate = self.get_parameter('sample_rate').get_parameter_value().integer_value
+        self.channels = self.get_parameter('channels').get_parameter_value().integer_value
+        self.blocksize = self.get_parameter('blocksize').get_parameter_value().integer_value
+        self.buffer_size = self.get_parameter('buffer_size').get_parameter_value().integer_value
+
+        # Buffer to hold audio chunks
         self.buffer = collections.deque(maxlen=self.buffer_size)  # Audio buffer
 
         # ROS2 Subscription
@@ -28,6 +38,11 @@ class AudioStreamPlayer(Node):
 
         # Log that the node has started
         self.get_logger().info("Audio Stream Player Node has started.")
+        self.get_logger().info(f"Configured output device: {self.output_device}")
+        self.get_logger().info(f"Configured sample rate: {self.sample_rate}")
+        self.get_logger().info(f"Configured channels: {self.channels}")
+        self.get_logger().info(f"Configured blocksize: {self.blocksize}")
+        self.get_logger().info(f"Configured buffer size: {self.buffer_size}")
 
     def audio_callback(self, msg):
         # Update sample rate and channel info based on the message
@@ -48,7 +63,7 @@ class AudioStreamPlayer(Node):
                 channels=self.channels,
                 samplerate=self.sample_rate,
                 dtype='float32',  # Ensure playback uses float32 format
-                blocksize=1024,
+                blocksize=self.blocksize,  # Block size is now parameterized
                 latency='low',
                 callback=self.output_callback
             )
