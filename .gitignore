@@ -1,2 +1,6 @@
 .vscode/
 log/
+audio_analysis/audio_analysis/__pycache__/*.pyc
+audio_analysis/audio_analysis/__pycache__/*.cpython-310.pyc
+audio_streamer/audio_streamer/__pycache__/__init__.cpython-310.pyc
+audio_streamer/audio_streamer/__pycache__/audio_stream_publisher.cpython-310.pyc
