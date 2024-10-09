@@ -1,3 +1,6 @@
+# Description: This script subscribes to the 'audio_stream' topic and displays a real-time spectrogram plot of the audio data.
+# The audio data is processed using the Fast Fourier Transform (FFT) to obtain the frequency components.
+
 import rclpy
 from rclpy.node import Node
 from audio_msgs.msg import Audio

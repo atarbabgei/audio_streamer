@@ -1,3 +1,6 @@
+# Description: This node subscribes to the audio_stream topic and publishes the amplitude of the audio signal to the audio_amplitude_stream topic.
+# The amplitude is calculated as the square root of the mean of the squared audio signal values.
+
 import rclpy
 from rclpy.node import Node
 from audio_msgs.msg import Audio
